@@ -9,33 +9,14 @@
     public static class GeojsonConfig
     {
         /// <summary>
-        /// Input path for district court GeoJSON file.
-        /// </summary>
-        private static string GeoDCInputPath = "../../../../PrepareData/sources/dc_boundaries.geojson";
-
-        /// <summary>
-        /// Output path for processed district court GeoJSON file.
-        /// </summary>
-        private static string GeoDCOutputPath = "../../../../DisplayMaps/sources/dc_usable.geojson";
-
-        /// <summary>
-        /// Input path for circuit court GeoJSON file.
-        /// </summary>
-        private static string GeoCCInputPath = "../../../../PrepareData/sources/cc_boundaries.geojson";
-
-        /// <summary>
-        /// Output path for processed circuit court GeoJSON file.
-        /// </summary>
-        private static string GeoCCOutputPath = "../../../../DisplayMaps/sources/cc_usable.geojson";
-
-        /// <summary>
         /// Processes the district court GeoJSON file, enriching it with data from a list of district courts.
         /// </summary>
         /// <param name="courts">List of district courts containing additional data to enrich the GeoJSON file.</param>
-        public static void CreateUsableGeojsonDC(List<DistrictCourt> courts)
+        /// <param name="inputFile">Contents of the geojson file that contains district boundaries.</param>
+        /// <returns>Content of viewable geojson file.</returns>
+        public static string CreateUsableGeojsonDC(List<DistrictCourt> courts, string inputFile)
         {
-            string geo1Content = File.ReadAllText(GeoDCInputPath);
-            var geo1 = JsonConvert.DeserializeObject<GeoJson>(geo1Content);
+            var geo1 = JsonConvert.DeserializeObject<GeoJson>(inputFile);
             if (geo1 != null)
             {
                 // Create a new GeoJSON object to store enriched features
@@ -68,18 +49,21 @@
                 }
 
                 string newGeoContent = JsonConvert.SerializeObject(geo2, Formatting.Indented);
-                File.WriteAllText(GeoDCOutputPath, newGeoContent);
+                return newGeoContent;
             }
+
+            return string.Empty;
         }
 
         /// <summary>
         /// Processes the circuit court GeoJSON file, enriching it with data from a list of circuit courts.
         /// </summary>
         /// <param name="courts">List of circuit courts containing additional data to enrich the GeoJSON file.</param>
-        public static void CreateUsableGeojsonCC(List<CircuitCourt> courts)
+        /// <param name="inputFile">Contents of the geojson file that contains district boundaries.</param>
+        /// <returns>Content of viewable geojson file.</returns>
+        public static string CreateUsableGeojsonCC(List<CircuitCourt> courts, string inputFile)
         {
-            string geo1Content = File.ReadAllText(GeoCCInputPath);
-            var geo1 = JsonConvert.DeserializeObject<GeoJson>(geo1Content);
+            var geo1 = JsonConvert.DeserializeObject<GeoJson>(inputFile);
             if (geo1 != null)
             {
                 // Create a new GeoJSON object to store enriched features
@@ -112,8 +96,10 @@
                 }
 
                 string newGeoContent = JsonConvert.SerializeObject(geo2, Formatting.Indented);
-                File.WriteAllText(GeoCCOutputPath, newGeoContent);
+                return newGeoContent;
             }
+
+            return string.Empty;
         }
     }
 }
